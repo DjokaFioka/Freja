@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Freja</string>
+
+    <string name="error_unkonwn">An error occured… Please try again later.</string>
+</resources>
