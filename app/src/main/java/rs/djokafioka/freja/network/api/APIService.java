@@ -8,8 +8,7 @@ import rs.djokafioka.freja.network.response.PersonResponse;
 /**
  * Created by Djordje on 18.2.2022..
  */
-public interface APIService
-{
+public interface APIService {
     @GET("logo")
     Call<PersonResponse> getPersonList(@Query("relyingPartyId") String relyingPartyId);
 }

@@ -19,8 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private PersonListAdapter mAdapter;
     private List<Person> mPersonList;
@@ -28,8 +27,7 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar mProgressBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -48,31 +46,22 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChanged(PersonResponse response) {
                 mProgressBar.setVisibility(View.GONE);
-                if(response != null)
-                {
-                    if (response.getPersonList() != null)
-                    {
+                if(response != null) {
+                    if (response.getPersonList() != null) {
                         mPersonList = response.getPersonList();
-                        if (mPersonList.size() > 0)
-                        {
-                            Collections.sort(mPersonList, new Comparator<Person>()
-                            {
+                        if (mPersonList.size() > 0) {
+                            Collections.sort(mPersonList, new Comparator<Person>() {
                                 @Override
-                                public int compare(Person o1, Person o2)
-                                {
+                                public int compare(Person o1, Person o2) {
                                     return (o1.getLastName().compareTo(o2.getLastName()));
                                 }
                             });
                         }
                         mAdapter.updatePersonList(mPersonList);
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(MainActivity.this, response.getError().getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                }
-                else
-                {
+                } else {
                     Toast.makeText(MainActivity.this, R.string.error_unkonwn, Toast.LENGTH_SHORT).show();
                 }
             }

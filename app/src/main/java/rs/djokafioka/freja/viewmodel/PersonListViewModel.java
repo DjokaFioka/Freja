@@ -8,29 +8,24 @@ import rs.djokafioka.freja.repository.PersonRepository;
 /**
  * Created by Djordje on 18.2.2022..
  */
-public class PersonListViewModel extends ViewModel
-{
+public class PersonListViewModel extends ViewModel {
     private PersonRepository mPersonRepository;
     private MutableLiveData<PersonResponse> mPersonListLiveData;
 
-    public PersonListViewModel()
-    {
+    public PersonListViewModel() {
         mPersonRepository = new PersonRepository();
         //mPersonListLiveData = mPersonRepository.getPersonList();
     }
 
-    public MutableLiveData<PersonResponse> getPersonListObserver()
-    {
-        if (mPersonListLiveData == null)
-        {
+    public MutableLiveData<PersonResponse> getPersonListObserver() {
+        if (mPersonListLiveData == null) {
             mPersonListLiveData = new MutableLiveData<PersonResponse>();
             loadData();
         }
         return mPersonListLiveData;
     }
 
-    public void loadData()
-    {
+    public void loadData() {
         mPersonListLiveData = mPersonRepository.getPersonList();
     }
 }
