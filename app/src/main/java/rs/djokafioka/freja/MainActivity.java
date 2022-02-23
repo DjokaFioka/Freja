@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import rs.djokafioka.freja.adapter.PersonListAdapter;
 import rs.djokafioka.freja.model.Person;
+import rs.djokafioka.freja.network.response.ApiResponse;
 import rs.djokafioka.freja.network.response.PersonResponse;
+import rs.djokafioka.freja.network.response.ErrorResponse;
 import rs.djokafioka.freja.viewmodel.PersonListViewModel;
 
 import android.os.Bundle;
@@ -15,8 +17,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,24 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
         mPersonListViewModel = new ViewModelProvider(this).get(PersonListViewModel.class);
         mProgressBar.setVisibility(View.VISIBLE);
-        mPersonListViewModel.getPersonListObserver().observe(this, new Observer<PersonResponse>() {
+
+        mPersonListViewModel.getPersonListObserver().observe(this, new Observer<ApiResponse<PersonResponse, ErrorResponse>>() {
             @Override
-            public void onChanged(PersonResponse response) {
+            public void onChanged(ApiResponse<PersonResponse, ErrorResponse> response) {
                 mProgressBar.setVisibility(View.GONE);
-                if(response != null) {
-                    if (response.getPersonList() != null) {
-                        mPersonList = response.getPersonList();
-                        if (mPersonList.size() > 0) {
-                            Collections.sort(mPersonList, new Comparator<Person>() {
-                                @Override
-                                public int compare(Person o1, Person o2) {
-                                    return (o1.getLastName().compareTo(o2.getLastName()));
-                                }
-                            });
-                        }
+                if (response != null) {
+                    if (response.isSuccess()) {
+                        mPersonList = response.getSuccess().getPersonList();
                         mAdapter.updatePersonList(mPersonList);
                     } else {
-                        Toast.makeText(MainActivity.this, response.getError().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, response.getFailure().getErrorMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(MainActivity.this, R.string.error_unkonwn, Toast.LENGTH_SHORT).show();
@@ -67,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        if (savedInstanceState != null)
-//            mPersonListViewModel.loadData();
+        if (savedInstanceState == null)
+            mPersonListViewModel.downloadDataUsingThread();
+            //mPersonListViewModel.downloadData();
     }
 
 }
